@@ -1,19 +1,38 @@
 # m5-pub
 
-Plain Java 17 starter with a simplified Indian income-tax/GST calculator (`TaxCalculator`) and a small in-memory order book (`OrderBook`, `Order`, `OrderStatus`), plus JUnit 5 tests and Makefile targets for coverage and mutation testing.
+Plain Java 17 code for a simplified Indian income-tax/GST calculator (`TaxCalculator`) and an in-memory order book (`OrderBook`), with JUnit 5 tests and Make targets for coverage and mutation testing.
+
+## Description
+
+Source files (`src/`):
+
+| File | Contents |
+|------|----------|
+| `TaxCalculator.java` | Simplified Indian income-tax + GST calculator. Public methods: `computeIncomeTax(BigDecimal)`, `computeVAT(BigDecimal amount, int gstRatePercent)`, `applyExemption(BigDecimal, BigDecimal)`, `roundToPaise(BigDecimal)`, `isEligibleForReturn(BigDecimal, int)`. |
+| `OrderBook.java` | In-memory order store. Public methods: `list()`, `find(String id)`, `create(String customerId, BigDecimal amount)`, `cancel(String id)`, `totalFor(String customerId)`. |
+| `Order.java` | `record Order(String id, String customerId, BigDecimal amount, OrderStatus status, Instant createdAt)` |
+| `OrderStatus.java` | `enum OrderStatus { NEW, CANCELLED }` |
+
+Tests (`test/`): `TaxCalculatorTest.java` (JUnit 5).
 
 ## Build
 
-Needs a JDK (17 or newer), `make` and `curl`. The JUnit, JaCoCo and PIT jars are downloaded into `libs/` the first time they are needed.
+### Requirements
 
-```
-make deps        # download JUnit
-make build       # compile src/ and test/ into build/
-make test        # run the JUnit 5 tests
-make coverage    # JaCoCo report at coverage/index.html
-make mutation    # PIT report at build/reports/pitest/index.html
-make clean       # remove build/, libs/, coverage/ and jacoco.exec
-```
+- JDK 17 or newer (`javac --release 17`)
+- `make`, `curl`, and a shell with `find` (on Windows, use Git Bash or WSL)
+- Network access the first time you run it, to download the tool JARs into `libs/`
+
+### Targets
+
+| Command | What it does |
+|---------|--------------|
+| `make deps` | Downloads JUnit Platform Console Standalone 1.10.0 to `libs/junit.jar` |
+| `make build` | Compiles `src/` and `test/` into `build/` |
+| `make test` | Runs all tests with the JUnit console launcher |
+| `make coverage` | Runs the tests under the JaCoCo 0.8.11 agent and writes `coverage/index.html` and `coverage/report.xml` |
+| `make mutation` | Runs PIT 1.17.4 (JUnit 5 plugin 1.2.2) against `TaxCalculator` and writes `build/reports/pitest/index.html` |
+| `make clean` | Removes `build/`, `libs/`, `coverage/` and `jacoco.exec` |
 
 ## Quick example
 
@@ -37,4 +56,4 @@ calc.computeVAT(new BigDecimal("1000"), 18);       // 180.00
 
 ## License
 
-MIT License. Copyright (c) <year> <copyright holder>.
+MIT License. Copyright (c) <YEAR> <COPYRIGHT HOLDER>.
