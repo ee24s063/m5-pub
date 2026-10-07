@@ -21,19 +21,25 @@ public class OrderBook {
     }
 
     /**
-     * Create a new order for a customer and add it to the order book.
+     * Create a new order for the given customer and amount, and store it.
+     * <p>
+     * The new order gets a randomly generated UUID string as its identifier,
+     * the status {@link OrderStatus#NEW}, and the current time as its creation
+     * timestamp. It is stored before it is returned, so it can be looked up
+     * with {@link #find(String)}. The customer is not checked against any
+     * existing records.
      *
-     * <p>The returned order has a newly generated unique id, status
-     * {@link OrderStatus#NEW}, and the current time as its creation time.
-     *
-     * @param customerId the {@code String} id of the customer placing the order;
-     *                   must not be {@code null}, empty, or whitespace only
-     * @param amount     the {@code BigDecimal} amount of the order; must not be
-     *                   {@code null} and must be strictly greater than zero
-     * @return the newly created {@link Order}, which can be looked up
-     *         afterwards with {@link #find(String)}
+     * @param customerId the {@code String} ID of the customer placing the order;
+     *                   must not be {@code null} or blank (empty or only
+     *                   whitespace, as defined by {@link String#isBlank()})
+     * @param amount     the {@code BigDecimal} order amount; must not be
+     *                   {@code null} and must be greater than zero. Any scale
+     *                   is accepted.
+     * @return the newly created {@link Order}, never {@code null}, with the
+     *         given customer ID and amount, status {@code NEW}, and the
+     *         creation time
      * @throws IllegalArgumentException if {@code customerId} is {@code null} or
-     *         blank, or if {@code amount} is {@code null}, zero, or negative
+     *         blank, or if {@code amount} is {@code null}, zero or negative
      */
     public Order create(String customerId, BigDecimal amount) {
         if (customerId == null || customerId.isBlank()) {
